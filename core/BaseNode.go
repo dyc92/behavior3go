@@ -23,7 +23,6 @@ type IBaseNode interface {
 	GetCategory() string
 	Execute(tick *Tick) b3.Status
 	GetName() string
-	GetTitle() string
 	SetBaseNodeWorker(worker IBaseWorker)
 	GetBaseNodeWorker() IBaseWorker
 }

@@ -1,0 +1,48 @@
+{
+  "version": "1.8.2",
+  "name": "base_dungeon_tree",
+  "prefix": "",
+  "group": [],
+  "import": [],
+  "vars": [],
+  "root": {
+    "id": "1",
+    "name": "Sequence",
+    "children": [
+      {
+        "id": "2",
+        "name": "GetAliveMonsterCount",
+        "args": {
+          "monster_id": 10001
+        },
+        "output": [
+          "BaseUnit"
+        ],
+        "children": [
+          {
+            "id": "3",
+            "name": "CheckCount",
+            "args": {
+              "char": "<",
+              "num": 5
+            },
+            "input": [
+              "BaseUnit"
+            ],
+            "children": [
+              {
+                "id": "4",
+                "name": "CreateMonster",
+                "args": {
+                  "value": "5",
+                  "monster_id": "10001"
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

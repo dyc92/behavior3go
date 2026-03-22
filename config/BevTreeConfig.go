@@ -3,21 +3,19 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 )
 
-//编辑器地址@http://editor.behavior3.com/#/editor
-//节点json类型
+// 编辑器地址@http://editor.behavior3.com/#/editor
+// 节点json类型
 type BTNodeCfg struct {
-	Id          string                 `json:"id"`
-	Name        string                 `json:"name"`
-	Category    string                 `json:"category"`
-	Title       string                 `json:"title"`
-	Description string                 `json:"description"`
-	Children    []string               `json:"children"`
-	Child       string                 `json:"child"`
-	Parameters  map[string]interface{} `json:"parameters"`
-	Properties  map[string]interface{} `json:"properties"`
+	Id       string                 `json:"id"`
+	Name     string                 `json:"name"`
+	Category string                 `json:"category"`
+	Children []BTNodeCfg            `json:"children"`
+	Args     map[string]interface{} `json:"Args"`
+	Input    []string               `json:"input"`
+	Output   []string               `json:"output"`
 }
 
 func (this *BTNodeCfg) GetProperty(name string) float64 {
@@ -72,26 +70,25 @@ func (this *BTNodeCfg) GetPropertyAsString(name string) string {
 
 	str, fok := v.(string)
 	if !fok {
-		return fmt.Sprintf("%v",v)
+		return fmt.Sprintf("%v", v)
 	}
 	return str
 }
 
-//树json类型
+// 树json类型
 type BTTreeCfg struct {
-	ID          string                 `json:"id"`
-	Title       string                 `json:"title"`
-	Description string                 `json:"description"`
-	Root        string                 `json:"root"`
-	Properties  map[string]interface{} `json:"properties"`
-	Nodes       map[string]BTNodeCfg   `json:"nodes"`
+	ID    string               `json:"id"`
+	Name  string               `json:"Name"`
+	Root  BTNodeCfg            `json:"root"`
+	Vars  []interface{}        `json:"vars"`
+	Nodes map[string]BTNodeCfg `json:"nodes"`
 }
 
-//加载
+// 加载
 func LoadTreeCfg(path string) (*BTTreeCfg, bool) {
 
 	var tree BTTreeCfg
-	file, err := ioutil.ReadFile(path)
+	file, err := os.ReadFile(path)
 	if err != nil {
 		fmt.Println("fail:", err)
 		return nil, false

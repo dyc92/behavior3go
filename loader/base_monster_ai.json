@@ -1,0 +1,55 @@
+{
+  "version": "1.8.2",
+  "name": "base_monster_ai",
+  "prefix": "",
+  "group": [],
+  "import": [],
+  "vars": [],
+  "root": {
+    "id": "1",
+    "name": "Sequence",
+    "children": [
+      {
+        "id": "2",
+        "name": "IfElse",
+        "children": [
+          {
+            "id": "3",
+            "name": "FindEnemy",
+            "args": {},
+            "output": [
+              "Unit"
+            ],
+            "children": []
+          },
+          {
+            "id": "4",
+            "name": "Attack",
+            "args": {
+              "value": 1001
+            },
+            "input": [
+              "Unit"
+            ],
+            "children": []
+          },
+          {
+            "id": "5",
+            "name": "Patrol",
+            "args": {
+              "point_a": [
+                100,
+                2
+              ],
+              "point_b": [
+                200,
+                2
+              ]
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

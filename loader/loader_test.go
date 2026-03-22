@@ -31,8 +31,8 @@ func TestExample(t *testing.T) {
 
 }
 
-///////////////////////加载事例///////////////////////////
-//自定义action节点
+// /////////////////////加载事例///////////////////////////
+// 自定义action节点
 type LogTest struct {
 	Action
 	info string
@@ -49,7 +49,7 @@ func (this *LogTest) OnTick(tick *Tick) b3.Status {
 }
 
 func TestLoadTree(t *testing.T) {
-	treeConfig, ok := LoadTreeCfg("tree.json")
+	treeConfig, ok := LoadTreeCfg("base_monster_ai.json")
 	if ok {
 		//自定义节点注册
 		maps := b3.NewRegisterStructMaps()

@@ -77,19 +77,7 @@ type BehaviorTree struct {
 	**/
 	id string
 
-	/**
-	 * The tree title.
-	 * @property {String} title
-	 * @readonly
-	**/
-	title string
-
-	/**
-	 * Description of the tree.
-	 * @property {String} description
-	 * @readonly
-	**/
-	description string
+	name string
 
 	/**
 	 * A dictionary with (key-value) properties. Useful to define custom
@@ -98,7 +86,7 @@ type BehaviorTree struct {
 	 * @property {Object} properties
 	 * @readonly
 	**/
-	properties map[string]interface{}
+	vars []interface{}
 
 	/**
 	 * The reference to the root node. Must be an instance of `b3.BaseNode`.
@@ -128,9 +116,7 @@ func NewBeTree() *BehaviorTree {
 **/
 func (this *BehaviorTree) Initialize() {
 	this.id = b3.CreateUUID()
-	this.title = "The behavior tree"
-	this.description = "Default description"
-	this.properties = make(map[string]interface{})
+	this.vars = []interface{}{}
 	this.root = nil
 	this.debug = nil
 }
@@ -140,7 +126,7 @@ func (this *BehaviorTree) GetID() string {
 }
 
 func (this *BehaviorTree) GetTitile() string {
-	return this.title
+	return this.name
 }
 
 func (this *BehaviorTree) SetDebug(debug interface{}) {
@@ -180,9 +166,8 @@ func (this *BehaviorTree) GetRoot() IBaseNode {
  * @param {Object} [names] A namespace or dict containing custom nodes.
 **/
 func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMaps, extMaps *b3.RegisterStructMaps) {
-	this.title = data.Title             //|| this.title;
-	this.description = data.Description // || this.description;
-	this.properties = data.Properties   // || this.properties;
+	this.vars = data.Vars // || this.properties;
+	this.name = data.Name
 	this.dumpInfo = data
 	nodes := make(map[string]IBaseNode)
 
@@ -211,7 +196,7 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 
 		if node == nil {
 			// Invalid node name
-			panic("BehaviorTree.load: Invalid node name:" + spec.Name + ",title:" + spec.Title)
+			panic("BehaviorTree.load: Invalid node name:" + spec.Name + ",title:" + spec.Name)
 
 		}
 
@@ -227,9 +212,9 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 
 		if node.GetCategory() == b3.COMPOSITE && spec.Children != nil {
 			for i := 0; i < len(spec.Children); i++ {
-				var cid = spec.Children[i]
+				var child = spec.Children[i]
 				comp := node.(IComposite)
-				comp.AddChild(nodes[cid])
+				comp.AddChild(nodes[child.Id])
 			}
 		} else if node.GetCategory() == b3.DECORATOR && len(spec.Child) > 0 {
 			dec := node.(IDecorator)
@@ -335,7 +320,7 @@ func printNode(root IBaseNode, blk int) {
 	}
 
 	//fmt.Println("|—<", root.Name, ">") //打印"|—<id>"形式
-	fmt.Print("|—", root.GetTitle())
+	//fmt.Print("|—", root.GetTitle())
 
 	if root.GetCategory() == b3.DECORATOR {
 		dec := root.(IDecorator)
