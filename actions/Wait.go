@@ -33,7 +33,7 @@ type Wait struct {
 **/
 func (this *Wait) Initialize(setting *BTNodeCfg) {
 	this.Action.Initialize(setting)
-	this.endTime = setting.GetPropertyAsInt64("milliseconds")
+	this.endTime = setting.GetPropertyAsInt64("time")
 }
 
 /**

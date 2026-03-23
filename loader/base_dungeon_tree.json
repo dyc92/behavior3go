@@ -12,32 +12,62 @@
       {
         "id": "2",
         "name": "GetAliveMonsterCount",
-        "args": {
-          "monster_id": 10001
-        },
+        "input": [],
         "output": [
           "BaseUnit"
         ],
+        "args": {
+          "monster_id": 10001
+        },
         "children": [
           {
             "id": "3",
             "name": "CheckCount",
+            "input": [
+              "BaseUnit"
+            ],
+            "output": [],
             "args": {
               "char": "<",
               "num": 5
             },
-            "input": [
-              "BaseUnit"
-            ],
             "children": [
               {
                 "id": "4",
                 "name": "CreateMonster",
+                "input": [],
+                "output": [],
                 "args": {
                   "value": "5",
                   "monster_id": "10001"
                 },
-                "children": []
+                "children": [
+                  {
+                    "id": "5",
+                    "name": "Repeat",
+                    "input": [
+                      ""
+                    ],
+                    "output": [],
+                    "args": {
+                      "count": 10
+                    },
+                    "children": [
+                      {
+                        "id": "6",
+                        "name": "Log",
+                        "input": [
+                          ""
+                        ],
+                        "output": [],
+                        "args": {
+                          "message": "fwewe",
+                          "level": "info"
+                        }
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }

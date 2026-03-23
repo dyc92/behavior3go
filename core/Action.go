@@ -39,6 +39,5 @@ func (this *Action) Initialize(params *BTNodeCfg) {
 	//this.id = b3.CreateUUID()
 	this.BaseNode.Initialize(params)
 	//this.BaseNode.IBaseWorker = this
-	this.parameters = make(map[string]interface{})
-	this.properties = make(map[string]interface{})
+	this.args = make(map[string]interface{})
 }

@@ -19,7 +19,7 @@ import (
  * The tick method must be called periodically, in order to send the tick
  * signal to all nodes in the tree, starting from the root. The method
  * `BehaviorTree.tick` receives a target object and a blackboard as
- * parameters. The target object can be anything: a game agent, a system, a
+ * args. The target object can be anything: a game agent, a system, a
  * DOM object, etc. This target is not used by any piece of Behavior3JS,
  * i.e., the target object will only be used by custom nodes.
  *
@@ -86,7 +86,7 @@ type BehaviorTree struct {
 	 * @property {Object} properties
 	 * @readonly
 	**/
-	vars []interface{}
+	vars []config.TreeVar
 
 	/**
 	 * The reference to the root node. Must be an instance of `b3.BaseNode`.
@@ -101,6 +101,9 @@ type BehaviorTree struct {
 	debug interface{}
 
 	dumpInfo *config.BTTreeCfg
+
+	maps    *b3.RegisterStructMaps
+	extMaps *b3.RegisterStructMaps
 }
 
 func NewBeTree() *BehaviorTree {
@@ -116,7 +119,7 @@ func NewBeTree() *BehaviorTree {
 **/
 func (this *BehaviorTree) Initialize() {
 	this.id = b3.CreateUUID()
-	this.vars = []interface{}{}
+	this.vars = []config.TreeVar{}
 	this.root = nil
 	this.debug = nil
 }
@@ -169,66 +172,59 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 	this.vars = data.Vars // || this.properties;
 	this.name = data.Name
 	this.dumpInfo = data
+	this.maps = maps
+	this.extMaps = extMaps
 	nodes := make(map[string]IBaseNode)
 
 	// Create the node list (without connection between them)
+	this.root = nil //TODO:
 
-	for id, s := range data.Nodes {
-		spec := &s
-		var node IBaseNode
+	var parseNode func(children ...*config.BTNodeCfg)
+	parseNode = func(children ...*config.BTNodeCfg) {
 
-		if spec.Category == "tree" {
-			node = new(SubTree)
-		} else {
-			if extMaps != nil && extMaps.CheckElem(spec.Name) {
-				// Look for the name in custom nodes
-				if tnode, err := extMaps.New(spec.Name); err == nil {
-					node = tnode.(IBaseNode)
-				}
+		for i := 0; i < len(children); i++ {
+			spec := children[i]
+			var node IBaseNode
+			if spec.Path != nil {
+				node = new(SubTree)
 			} else {
-				if tnode, err2 := maps.New(spec.Name); err2 == nil {
-					node = tnode.(IBaseNode)
+				if this.extMaps != nil && this.extMaps.CheckElem(spec.Name) {
+					// Look for the name in custom nodes
+					if tnode, err := this.extMaps.New(spec.Name); err == nil {
+						node = tnode.(IBaseNode)
+					}
 				} else {
-					//fmt.Println("new ", spec.Name, " err:", err2)
+					if tnode, err2 := this.maps.New(spec.Name); err2 == nil {
+						node = tnode.(IBaseNode)
+					} else {
+						//fmt.Println("new ", spec.Name, " err:", err2)
+					}
 				}
 			}
-		}
 
-		if node == nil {
-			// Invalid node name
-			panic("BehaviorTree.load: Invalid node name:" + spec.Name + ",title:" + spec.Name)
+			if node == nil {
+				// Invalid node name
+				panic("BehaviorTree.load: Invalid node name:" + spec.Name + ",title:" + spec.Name)
 
-		}
-
-		node.Ctor()
-		node.Initialize(spec)
-		node.SetBaseNodeWorker(node.(IBaseWorker))
-		nodes[id] = node
-	}
-
-	// Connect the nodes
-	for id, spec := range data.Nodes {
-		node := nodes[id]
-
-		if node.GetCategory() == b3.COMPOSITE && spec.Children != nil {
-			for i := 0; i < len(spec.Children); i++ {
-				var child = spec.Children[i]
-				comp := node.(IComposite)
-				comp.AddChild(nodes[child.Id])
 			}
-		} else if node.GetCategory() == b3.DECORATOR && len(spec.Child) > 0 {
-			dec := node.(IDecorator)
-			dec.SetChild(nodes[spec.Child])
+
+			node.Ctor()
+			node.Initialize(spec)
+			node.SetBaseNodeWorker(node.(IBaseWorker))
+			nodes[spec.Id] = node
+
+			if spec.Children != nil {
+				parseNode(spec.Children...)
+			}
 		}
 	}
-
-	this.root = nodes[data.Root]
+	parseNode(&data.Root)
 }
 
 /**
  * This method dump the current BT into a data structure.
  *
- * Note: This method does not record the current node parameters. Thus,
+ * Note: This method does not record the current node args. Thus,
  * it may not be compatible with load for now.
  *
  * @method dump

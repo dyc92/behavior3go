@@ -38,18 +38,13 @@ type LogTest struct {
 	info string
 }
 
-func (this *LogTest) Initialize(setting *BTNodeCfg) {
-	this.Action.Initialize(setting)
-	this.info = setting.GetPropertyAsString("info")
-}
-
 func (this *LogTest) OnTick(tick *Tick) b3.Status {
 	fmt.Println("logtest:", this.info)
 	return b3.SUCCESS
 }
 
 func TestLoadTree(t *testing.T) {
-	treeConfig, ok := LoadTreeCfg("base_monster_ai.json")
+	treeConfig, ok := LoadTreeCfg("base_dungeon_tree.json")
 	if ok {
 		//自定义节点注册
 		maps := b3.NewRegisterStructMaps()

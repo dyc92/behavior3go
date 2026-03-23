@@ -1,7 +1,6 @@
 package decorators
 
 import (
-
 	b3 "github.com/magicsea/behavior3go"
 	. "github.com/magicsea/behavior3go/config"
 	. "github.com/magicsea/behavior3go/core"
@@ -18,7 +17,7 @@ import (
 **/
 type Repeater struct {
 	Decorator
-	maxLoop int
+	maxLoop int64
 }
 
 /**
@@ -35,7 +34,7 @@ type Repeater struct {
 **/
 func (this *Repeater) Initialize(setting *BTNodeCfg) {
 	this.Decorator.Initialize(setting)
-	this.maxLoop = setting.GetPropertyAsInt("maxLoop")
+	this.maxLoop = setting.GetPropertyAsInt64("count")
 	if this.maxLoop < 1 {
 		panic("maxLoop parameter in MaxTime decorator is an obligatory parameter")
 	}
@@ -61,7 +60,7 @@ func (this *Repeater) OnTick(tick *Tick) b3.Status {
 	if this.GetChild() == nil {
 		return b3.ERROR
 	}
-	var i = tick.Blackboard.GetInt("i", tick.GetTree().GetID(), this.GetID())
+	var i = tick.Blackboard.GetInt64("i", tick.GetTree().GetID(), this.GetID())
 	var status = b3.SUCCESS
 	for this.maxLoop < 0 || i < this.maxLoop {
 		status = this.GetChild().Execute(tick)

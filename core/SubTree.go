@@ -5,7 +5,7 @@ import (
 	. "github.com/magicsea/behavior3go/config"
 )
 
-//子树，通过Name关联树ID查找
+// 子树，通过Name关联树ID查找
 type SubTree struct {
 	Action
 	//tree *BehaviorTree
@@ -14,6 +14,7 @@ type SubTree struct {
 func (this *SubTree) Initialize(setting *BTNodeCfg) {
 	this.Action.Initialize(setting)
 }
+
 /**
  *执行子树
  *使用sTree.Tick(tar, tick.Blackboard)的方法会导致每个树有自己的tick。
@@ -42,14 +43,9 @@ func (this *SubTree) OnTick(tick *Tick) b3.Status {
 	return ret
 }
 
-func (this *SubTree) String() string  {
-	return "SBT_"+this.GetTitle()
-}
-
-
 var subTreeLoadFunc func(string) *BehaviorTree
 
-//获取子树的方法
+// 获取子树的方法
 func SetSubTreeLoadFunc(f func(string) *BehaviorTree) {
 	subTreeLoadFunc = f
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 )
+
 /**
  * The Blackboard is the memory structure required by `BehaviorTree` and its
  * nodes. It only have 2 public methods: `set` and `get`. These methods works
@@ -18,7 +19,7 @@ import (
  * - In per node per tree context, the information stored in the blackboard
  *   can only be accessed by the same node that wrote the data.
  *
- * The context is selected indirectly by the parameters provided to these
+ * The context is selected indirectly by the args provided to these
  * methods, for example:
  *
  *     // getting/setting variable in global context
@@ -54,7 +55,7 @@ func NewTreeData() *TreeData {
 	return &TreeData{NewMemory(), make([]IBaseNode, 0), 0, 0}
 }
 
-//------------------------Memory-------------------------
+// ------------------------Memory-------------------------
 type Memory struct {
 	_memory map[string]interface{}
 }
@@ -70,9 +71,10 @@ func (this *Memory) Set(key string, val interface{}) {
 	this._memory[key] = val
 }
 func (this *Memory) Remove(key string) {
-	delete(this._memory,key)
+	delete(this._memory, key)
 }
-//------------------------TreeMemory-------------------------
+
+// ------------------------TreeMemory-------------------------
 type TreeMemory struct {
 	*Memory
 	_treeData   *TreeData
@@ -83,7 +85,7 @@ func NewTreeMemory() *TreeMemory {
 	return &TreeMemory{NewMemory(), NewTreeData(), make(map[string]*Memory)}
 }
 
-//------------------------Blackboard-------------------------
+// ------------------------Blackboard-------------------------
 type Blackboard struct {
 	_baseMemory *Memory
 	_treeMemory map[string]*TreeMemory
@@ -223,7 +225,7 @@ func (this *Blackboard) Get(key, treeScope, nodeScope string) interface{} {
 	return memory.Get(key)
 }
 func (this *Blackboard) GetMem(key string) interface{} {
-	memory := this._getMemory("","")
+	memory := this._getMemory("", "")
 	return memory.Get(key)
 }
 func (this *Blackboard) GetFloat64(key, treeScope, nodeScope string) float64 {
@@ -285,7 +287,7 @@ func (this *Blackboard) GetInt32(key, treeScope, nodeScope string) int32 {
 	return v.(int32)
 }
 
-func ReadNumberToInt64(v interface{})  int64 {
+func ReadNumberToInt64(v interface{}) int64 {
 	var ret int64
 	switch tvalue := v.(type) {
 	case uint64:
@@ -307,6 +309,7 @@ func ReadNumberToUInt64(v interface{}) uint64 {
 	}
 	return ret
 }
+
 //
 //func ReadNumberToInt32(v interface{}) int32 {
 //	var ret int32

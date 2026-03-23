@@ -36,7 +36,7 @@ type IBaseNode interface {
  * `b3.Decorator`, `b3.Action` or `b3.Condition`, instead.
  *
  * The attributes are specially designed to serialization of the node in a
- * JSON format. In special, the `parameters` attribute can be set into the
+ * JSON format. In special, the `args` attribute can be set into the
  * visual editor (thus, in the JSON file), and it will be used as parameter
  * on the node initialization at `BehaviorTree.load`.
  *
@@ -77,23 +77,7 @@ type BaseNode struct {
 	category string
 
 	/**
-	 * Node title.
-	 * @property {String} title
-	 * @optional
-	 * @readonly
-	**/
-	title string
-
-	/**
-	 * Node description.
-	 * @property {String} description
-	 * @optional
-	 * @readonly
-	**/
-	description string
-
-	/**
-	 * A dictionary (key, value) describing the node parameters. Useful for
+	 * A dictionary (key, value) describing the node args. Useful for
 	 * defining parameter values in the visual editor. Note: this is only
 	 * useful for nodes when loading trees from JSON files.
 	 *
@@ -101,21 +85,11 @@ type BaseNode struct {
 	 * attribute, thus, this attribute is deprecated in favor to
 	 * `properties`.**
 	 *
-	 * @property {Object} parameters
+	 * @property {Object} args
 	 * @deprecated since 0.2.0.
 	 * @readonly
 	**/
-	parameters map[string]interface{}
-
-	/**
-	 * A dictionary (key, value) describing the node properties. Useful for
-	 * defining custom variables inside the visual editor.
-	 *
-	 * @property properties
-	 * @type {Object}
-	 * @readonly
-	**/
-	properties map[string]interface{}
+	args map[string]interface{}
 }
 
 func (this *BaseNode) Ctor() {
@@ -145,15 +119,11 @@ func (this *BaseNode) GetBaseNodeWorker() IBaseWorker {
 func (this *BaseNode) Initialize(params *BTNodeCfg) {
 	//this.id = b3.CreateUUID()
 	//this.title       = this.title || this.name
-	this.description = ""
-	this.parameters = make(map[string]interface{})
-	this.properties = make(map[string]interface{})
+	this.args = make(map[string]interface{})
 
 	this.id = params.Id //|| node.id;
 	this.name = params.Name
-	this.title = params.Title             //|| node.title;
-	this.description = params.Description // || node.description;
-	this.properties = params.Properties   //|| node.properties;
+	this.args = params.Args //|| node.properties;
 
 }
 
@@ -167,10 +137,6 @@ func (this *BaseNode) GetID() string {
 
 func (this *BaseNode) GetName() string {
 	return this.name
-}
-func (this *BaseNode) GetTitle() string {
-	//fmt.Println("GetTitle ", this.title)
-	return this.title
 }
 
 /**

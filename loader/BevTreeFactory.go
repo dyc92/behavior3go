@@ -29,8 +29,6 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 
 	//decorators
 	st.Register("Inverter", &Inverter{})
-	st.Register("Limiter", &Limiter{})
-	st.Register("MaxTime", &MaxTime{})
 	st.Register("Repeater", &Repeater{})
 	st.Register("RepeatUntilFailure", &RepeatUntilFailure{})
 	st.Register("RepeatUntilSuccess", &RepeatUntilSuccess{})
