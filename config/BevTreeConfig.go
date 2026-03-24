@@ -44,6 +44,10 @@ func (node *BTNodeCfg) GetPropertyAsInt64(str string) int64 {
 	return i
 }
 
+func (node *BTNodeCfg) GetPropertyAsSliceInt(str string) []int64 {
+	return node.Args[str].([]int64)
+}
+
 type TreeVar struct {
 	Name string `json:"name"` // 变量名
 	Desc string `json:"desc"` // 变量描述
