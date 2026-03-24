@@ -2,6 +2,7 @@ package loader
 
 import (
 	"fmt"
+	"github.com/magicsea/behavior3go/actions"
 	"reflect"
 	"testing"
 
@@ -49,16 +50,15 @@ func TestLoadTree(t *testing.T) {
 		//自定义节点注册
 		maps := b3.NewRegisterStructMaps()
 		maps.Register("Log", new(LogTest))
+		maps.Register("GetAliveMonsterCount", new(actions.GetAliveMonsterCount))
 
 		//载入
 		tree := CreateBevTreeFromConfig(treeConfig, maps)
 		tree.Print()
 
-		//输入板
-		board := NewBlackboard()
 		//循环每一帧
 		for i := 0; i < 5; i++ {
-			tree.Tick(i, board)
+			tree.Tick(i)
 		}
 	} else {
 		t.Error("LoadTreeCfg err")

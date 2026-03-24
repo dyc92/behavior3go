@@ -138,6 +138,9 @@ func (this *BaseNode) GetID() string {
 func (this *BaseNode) GetName() string {
 	return this.name
 }
+func (this *BaseNode) GetArgs(name string) interface{} {
+	return this.args[name]
+}
 
 /**
  * This is the main method to propagate the tick signal to this node. This

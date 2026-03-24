@@ -5,10 +5,10 @@ import (
 	. "github.com/magicsea/behavior3go/core"
 )
 
-type Failer struct {
+type JustSuccess struct {
 	Action
 }
 
-func (this *Failer) OnTick(tick *Tick) b3.Status {
-	return b3.FAILURE
+func (this *JustSuccess) OnTick(tick *Tick) b3.Status {
+	return b3.SUCCESS
 }

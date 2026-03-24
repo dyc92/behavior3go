@@ -16,7 +16,7 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 	st := b3.NewRegisterStructMaps()
 	//actions
 	st.Register("Error", &Error{})
-	st.Register("Failer", &Failer{})
+	st.Register("JustFailer", &JustFailer{})
 	st.Register("Runner", &Runner{})
 	st.Register("Succeeder", &Succeeder{})
 	st.Register("Wait", &Wait{})
@@ -25,6 +25,7 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 	st.Register("MemPriority", &MemPriority{})
 	st.Register("MemSequence", &MemSequence{})
 	st.Register("Priority", &Priority{})
+	st.Register("RetryUntilFailure", &RetryUntilFailure{})
 	st.Register("Sequence", &Sequence{})
 
 	//decorators

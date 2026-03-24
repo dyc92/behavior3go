@@ -86,7 +86,7 @@ type BehaviorTree struct {
 	 * @property {Object} properties
 	 * @readonly
 	**/
-	vars []config.TreeVar
+	blackboard *Blackboard
 
 	/**
 	 * The reference to the root node. Must be an instance of `b3.BaseNode`.
@@ -119,7 +119,8 @@ func NewBeTree() *BehaviorTree {
 **/
 func (this *BehaviorTree) Initialize() {
 	this.id = b3.CreateUUID()
-	this.vars = []config.TreeVar{}
+	this.blackboard = NewBlackboard()
+	this.blackboard.Initialize()
 	this.root = nil
 	this.debug = nil
 }
@@ -169,7 +170,10 @@ func (this *BehaviorTree) GetRoot() IBaseNode {
  * @param {Object} [names] A namespace or dict containing custom nodes.
 **/
 func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMaps, extMaps *b3.RegisterStructMaps) {
-	this.vars = data.Vars // || this.properties;
+	for i := 0; i < len(data.Vars); i++ {
+		this.blackboard.SetMem(data.Vars[i].Name, nil)
+	}
+
 	this.name = data.Name
 	this.dumpInfo = data
 	this.maps = maps
@@ -256,8 +260,8 @@ func (this *BehaviorTree) dump() *config.BTTreeCfg {
  * @param {Blackboard} blackboard An instance of blackboard object.
  * @return {Constant} The tick signal state.
 **/
-func (this *BehaviorTree) Tick(target interface{}, blackboard *Blackboard) b3.Status {
-	if blackboard == nil {
+func (this *BehaviorTree) Tick(target interface{}) b3.Status {
+	if this.blackboard == nil {
 		panic("The blackboard parameter is obligatory and must be an instance of b3.Blackboard")
 	}
 
@@ -265,14 +269,14 @@ func (this *BehaviorTree) Tick(target interface{}, blackboard *Blackboard) b3.St
 	var tick = NewTick()
 	tick.debug = this.debug
 	tick.target = target
-	tick.Blackboard = blackboard
+	tick.Blackboard = this.blackboard
 	tick.tree = this
 
 	/* TICK NODE */
 	var state = this.root._execute(tick)
 
 	/* CLOSE NODES FROM LAST TICK, IF NEEDED */
-	var lastOpenNodes = blackboard._getTreeData(this.id).OpenNodes
+	var lastOpenNodes = this.blackboard._getTreeData(this.id).OpenNodes
 	var currOpenNodes []IBaseNode
 	currOpenNodes = append(currOpenNodes, tick._openNodes...)
 
@@ -298,8 +302,8 @@ func (this *BehaviorTree) Tick(target interface{}, blackboard *Blackboard) b3.St
 	}
 
 	/* POPULATE BLACKBOARD */
-	blackboard._getTreeData(this.id).OpenNodes = currOpenNodes
-	blackboard.SetTree("nodeCount", tick._nodeCount, this.id)
+	this.blackboard._getTreeData(this.id).OpenNodes = currOpenNodes
+	this.blackboard.SetTree("nodeCount", tick._nodeCount, this.id)
 
 	return state
 }

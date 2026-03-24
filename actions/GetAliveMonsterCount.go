@@ -19,5 +19,6 @@ func (this *GetAliveMonsterCount) Initialize(setting *BTNodeCfg) {
 
 func (this *GetAliveMonsterCount) OnTick(tick *Tick) b3.Status {
 	fmt.Println("log:", this.monsterID)
+	tick.Blackboard.SetMem("BaseUnit", []int{})
 	return b3.SUCCESS
 }
