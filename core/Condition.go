@@ -26,6 +26,7 @@ func (this *Condition) Ctor() {
  * @construCtor
 **/
 func (this *Condition) Initialize(params *BTNodeCfg) {
+	params.Category = b3.CONDITION
 	this.BaseNode.Initialize(params)
 	//this.BaseNode.IBaseWorker = this
 }

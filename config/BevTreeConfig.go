@@ -20,10 +20,30 @@ type BTNodeCfg struct {
 	Debug    *bool                  `json:"debug,omitempty"`    // 可选布尔值，指针标识 omitempty
 	Disabled *bool                  `json:"disabled,omitempty"` // 可选布尔值，指针标识 omitempty
 	Path     *string                `json:"path,omitempty"`     // 可选字符串
+	Category string                 `json:"category,omitempty"`
 }
 
 func (node *BTNodeCfg) GetPropertyAsString(str string) string {
 	return node.Args[str].(string)
+}
+
+func (node *BTNodeCfg) GetPropertyAsInt32(str string) int32 {
+	v, ok := node.Args[str]
+	if !ok {
+		fmt.Println("fail, not found:", str)
+		return 0
+	}
+	if v == "" {
+		fmt.Println("fail, empty:", str)
+		return 0
+	}
+
+	i, err := strconv.ParseInt(fmt.Sprintf("%v", v), 10, 32)
+	if err != nil {
+		fmt.Println("fail, parse int42:", err, v)
+		return 0
+	}
+	return int32(i)
 }
 
 func (node *BTNodeCfg) GetPropertyAsInt64(str string) int64 {

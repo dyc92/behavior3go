@@ -21,5 +21,6 @@ func (this *Patrol) Initialize(setting *BTNodeCfg) {
 func (this *Patrol) OnTick(tick *Tick) b3.Status {
 
 	//TODO: 实现巡逻逻辑
-	return b3.SUCCESS
+
+	return b3.RUNNING
 }

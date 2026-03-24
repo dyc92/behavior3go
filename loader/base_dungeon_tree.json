@@ -1,73 +1,75 @@
 {
   "version": "1.8.2",
   "name": "base_dungeon_tree",
+  "desc": "",
   "prefix": "",
+  "export": true,
   "group": [],
   "import": [],
-  "vars": [],
+  "vars": [
+    {
+      "name": "BaseUnit",
+      "desc": "数组"
+    }
+  ],
   "root": {
     "id": "1",
     "name": "Sequence",
+    "input": [
+      ""
+    ],
+    "output": [],
+    "args": {
+      "count": 5
+    },
     "children": [
       {
         "id": "2",
-        "name": "GetAliveMonsterCount",
+        "name": "CheckMonsterCount",
         "input": [],
-        "output": [
-          "BaseUnit"
-        ],
+        "output": [],
         "args": {
-          "monster_id": 10001
+          "monster_config_id": 10001,
+          "count": 10,
+          "char": "<"
         },
         "children": [
           {
             "id": "3",
-            "name": "CheckCount",
-            "input": [
-              "BaseUnit"
-            ],
+            "name": "CreateMonster",
+            "input": [],
             "output": [],
             "args": {
-              "char": "<",
-              "num": 5
-            },
+              "count": 1,
+              "monster_config_id": "10001"
+            }
+          }
+        ]
+      },
+      {
+        "id": "4",
+        "name": "CheckMonsterCount",
+        "input": [],
+        "output": [],
+        "args": {
+          "monster_config_id": 10002,
+          "count": 1,
+          "char": "<"
+        },
+        "children": [
+          {
+            "id": "5",
+            "name": "Once",
+            "input": [],
+            "output": [],
+            "args": {},
             "children": [
               {
-                "id": "4",
-                "name": "CreateMonster",
+                "id": "6",
+                "name": "BattleSettlement",
                 "input": [],
                 "output": [],
-                "args": {
-                  "value": "5",
-                  "monster_id": "10001"
-                },
-                "children": [
-                  {
-                    "id": "5",
-                    "name": "Repeat",
-                    "input": [
-                      ""
-                    ],
-                    "output": [],
-                    "args": {
-                      "count": 10
-                    },
-                    "children": [
-                      {
-                        "id": "6",
-                        "name": "Log",
-                        "input": [
-                          ""
-                        ],
-                        "output": [],
-                        "args": {
-                          "message": "fwewe",
-                          "level": "info"
-                        }
-                      }
-                    ]
-                  }
-                ]
+                "args": {}
               }
             ]
           }

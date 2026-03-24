@@ -35,7 +35,7 @@ func (this *Action) Ctor() {
 	this.category = b3.ACTION
 }
 func (this *Action) Initialize(params *BTNodeCfg) {
-
+	params.Category = b3.ACTION
 	//this.id = b3.CreateUUID()
 	this.BaseNode.Initialize(params)
 	//this.BaseNode.IBaseWorker = this

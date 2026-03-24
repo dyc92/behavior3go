@@ -12,7 +12,6 @@ type Attack struct {
 
 func (this *Attack) Initialize(setting *BTNodeCfg) {
 	this.Action.Initialize(setting)
-
 }
 
 func (this *Attack) OnTick(tick *Tick) b3.Status {

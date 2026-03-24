@@ -33,6 +33,7 @@ func (this *Composite) Ctor() {
  * @construCtor
 **/
 func (this *Composite) Initialize(params *BTNodeCfg) {
+	params.Category = b3.COMPOSITE
 	this.BaseNode.Initialize(params)
 	//this.BaseNode.IBaseWorker = this
 	this.children = make([]IBaseNode, 0)
@@ -48,12 +49,12 @@ func (this *Composite) GetChildCount() int {
 	return len(this.children)
 }
 
-//GetChild
+// GetChild
 func (this *Composite) GetChild(index int) IBaseNode {
 	return this.children[index]
 }
 
-//AddChild
+// AddChild
 func (this *Composite) AddChild(child IBaseNode) {
 	this.children = append(this.children, child)
 }

@@ -120,7 +120,7 @@ func (this *BaseNode) Initialize(params *BTNodeCfg) {
 	//this.id = b3.CreateUUID()
 	//this.title       = this.title || this.name
 	this.args = make(map[string]interface{})
-
+	this.category = params.Category
 	this.id = params.Id //|| node.id;
 	this.name = params.Name
 	this.args = params.Args //|| node.properties;

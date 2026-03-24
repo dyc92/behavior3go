@@ -11,8 +11,8 @@ type MoveToTarget struct {
 }
 
 func (this *MoveToTarget) Initialize(setting *BTNodeCfg) {
-	this.Action.Initialize(setting)
 
+	this.Action.Initialize(setting)
 }
 
 func (this *MoveToTarget) OnTick(tick *Tick) b3.Status {

@@ -181,7 +181,24 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 	nodes := make(map[string]IBaseNode)
 
 	// Create the node list (without connection between them)
-	this.root = nil //TODO:
+	if this.extMaps != nil && this.extMaps.CheckElem(data.Root.Name) {
+		// Look for the name in custom nodes
+		if tnode, err := this.extMaps.New(data.Root.Name); err == nil {
+			this.root = tnode.(IBaseNode)
+		}
+	} else {
+		if tnode, err2 := this.maps.New(data.Root.Name); err2 == nil {
+			this.root = tnode.(IBaseNode)
+		} else {
+			//fmt.Println("new ", spec.Name, " err:", err2)
+		}
+	}
+	if this.root == nil {
+		panic("BehaviorTree.load: Invalid root node name:" + data.Root.Name + ",title:" + data.Root.Name)
+	}
+	this.root.Ctor()
+	this.root.Initialize(&data.Root)
+	this.root.SetBaseNodeWorker(this.root.(IBaseWorker))
 
 	var parseNode func(children ...*config.BTNodeCfg)
 	parseNode = func(children ...*config.BTNodeCfg) {

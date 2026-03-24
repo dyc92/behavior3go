@@ -1,41 +1,70 @@
 {
   "version": "1.8.2",
   "name": "base_monster_ai",
+  "desc": "",
   "prefix": "",
+  "export": true,
   "group": [],
   "import": [],
-  "vars": [],
+  "vars": [
+    {
+      "name": "Unit",
+      "desc": "攻击目标"
+    }
+  ],
   "root": {
     "id": "1",
     "name": "Sequence",
+    "input": [],
+    "output": [],
+    "args": {},
     "children": [
       {
         "id": "2",
         "name": "IfElse",
+        "input": [],
+        "output": [],
+        "args": {},
         "children": [
           {
             "id": "3",
             "name": "FindEnemy",
-            "args": {},
+            "input": [],
             "output": [
               "Unit"
             ],
+            "args": {},
             "children": []
           },
           {
             "id": "4",
-            "name": "Attack",
-            "args": {
-              "value": 1001
-            },
+            "name": "MoveToTarget",
             "input": [
               "Unit"
             ],
-            "children": []
+            "output": [],
+            "args": {
+              "value": 8
+            },
+            "children": [
+              {
+                "id": "5",
+                "name": "Attack",
+                "input": [
+                  "Unit"
+                ],
+                "output": [],
+                "args": {
+                  "value": 1001
+                }
+              }
+            ]
           },
           {
-            "id": "5",
+            "id": "6",
             "name": "Patrol",
+            "input": [],
+            "output": [],
             "args": {
               "point_a": [
                 100,
@@ -45,8 +74,7 @@
                 200,
                 2
               ]
-            },
-            "children": []
+            }
           }
         ]
       }

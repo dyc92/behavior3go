@@ -2,11 +2,16 @@ package actions
 
 import (
 	b3 "github.com/magicsea/behavior3go"
+	. "github.com/magicsea/behavior3go/config"
 	. "github.com/magicsea/behavior3go/core"
 )
 
 type JustSuccess struct {
 	Action
+}
+
+func (this *JustSuccess) Initialize(setting *BTNodeCfg) {
+	this.Action.Initialize(setting)
 }
 
 func (this *JustSuccess) OnTick(tick *Tick) b3.Status {

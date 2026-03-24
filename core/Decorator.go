@@ -29,11 +29,12 @@ func (this *Decorator) Ctor() {
  * @construCtor
 **/
 func (this *Decorator) Initialize(params *BTNodeCfg) {
+	params.Category = b3.DECORATOR
 	this.BaseNode.Initialize(params)
 	//this.BaseNode.IBaseWorker = this
 }
 
-//GetChild
+// GetChild
 func (this *Decorator) GetChild() IBaseNode {
 	return this.child
 }
