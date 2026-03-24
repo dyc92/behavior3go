@@ -180,7 +180,6 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 	this.extMaps = extMaps
 	nodes := make(map[string]IBaseNode)
 
-	// Create the node list (without connection between them)
 	if this.extMaps != nil && this.extMaps.CheckElem(data.Root.Name) {
 		// Look for the name in custom nodes
 		if tnode, err := this.extMaps.New(data.Root.Name); err == nil {
@@ -190,18 +189,18 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 		if tnode, err2 := this.maps.New(data.Root.Name); err2 == nil {
 			this.root = tnode.(IBaseNode)
 		} else {
-			//fmt.Println("new ", spec.Name, " err:", err2)
+			fmt.Println("new ", data.Root.Name, " err:", err2)
 		}
-	}
-	if this.root == nil {
-		panic("BehaviorTree.load: Invalid root node name:" + data.Root.Name + ",title:" + data.Root.Name)
 	}
 	this.root.Ctor()
 	this.root.Initialize(&data.Root)
 	this.root.SetBaseNodeWorker(this.root.(IBaseWorker))
+	if this.root == nil {
+		panic("BehaviorTree.load: Invalid root name:" + data.Root.Name)
+	}
 
-	var parseNode func(children ...*config.BTNodeCfg)
-	parseNode = func(children ...*config.BTNodeCfg) {
+	var parseNode func(parent IBaseNode, children ...*config.BTNodeCfg)
+	parseNode = func(parent IBaseNode, children ...*config.BTNodeCfg) {
 
 		for i := 0; i < len(children); i++ {
 			spec := children[i]
@@ -226,20 +225,21 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 			if node == nil {
 				// Invalid node name
 				panic("BehaviorTree.load: Invalid node name:" + spec.Name + ",title:" + spec.Name)
-
 			}
 
 			node.Ctor()
 			node.Initialize(spec)
 			node.SetBaseNodeWorker(node.(IBaseWorker))
+
+			parent.AddChild(node)
 			nodes[spec.Id] = node
 
 			if spec.Children != nil {
-				parseNode(spec.Children...)
+				parseNode(node, spec.Children...)
 			}
 		}
 	}
-	parseNode(&data.Root)
+	parseNode(this.root, data.Root.Children...)
 }
 
 /**
@@ -341,9 +341,9 @@ func printNode(root IBaseNode, blk int) {
 
 	if root.GetCategory() == b3.DECORATOR {
 		dec := root.(IDecorator)
-		if dec.GetChild() != nil {
+		if dec.GetChild(0) != nil {
 			//fmt.Print("=>")
-			printNode(dec.GetChild(), blk+3)
+			printNode(dec.GetChild(0), blk+3)
 		}
 	}
 

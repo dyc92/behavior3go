@@ -25,6 +25,9 @@ type IBaseNode interface {
 	GetName() string
 	SetBaseNodeWorker(worker IBaseWorker)
 	GetBaseNodeWorker() IBaseWorker
+	GetChildCount() int
+	GetChild(index int) IBaseNode
+	AddChild(child IBaseNode)
 }
 
 /**
@@ -90,10 +93,11 @@ type BaseNode struct {
 	 * @readonly
 	**/
 	args map[string]interface{}
+
+	children []IBaseNode
 }
 
 func (this *BaseNode) Ctor() {
-
 }
 
 func (this *BaseNode) SetName(name string) {
@@ -111,6 +115,20 @@ func (this *BaseNode) GetBaseNodeWorker() IBaseWorker {
 	return this.IBaseWorker
 }
 
+func (this *BaseNode) GetChildCount() int {
+	return len(this.children)
+}
+
+// GetChild
+func (this *BaseNode) GetChild(index int) IBaseNode {
+	return this.children[index]
+}
+
+// AddChild
+func (this *BaseNode) AddChild(child IBaseNode) {
+	this.children = append(this.children, child)
+}
+
 /**
  * Initialization method.
  * @method Initialize
@@ -124,7 +142,6 @@ func (this *BaseNode) Initialize(params *BTNodeCfg) {
 	this.id = params.Id //|| node.id;
 	this.name = params.Name
 	this.args = params.Args //|| node.properties;
-
 }
 
 func (this *BaseNode) GetCategory() string {

@@ -57,13 +57,13 @@ func (this *RepeatUntilFailure) OnOpen(tick *Tick) {
  * @return {Constant} A state constant.
 **/
 func (this *RepeatUntilFailure) OnTick(tick *Tick) b3.Status {
-	if this.GetChild() == nil {
+	if this.GetChild(0) == nil {
 		return b3.ERROR
 	}
 	var i = tick.Blackboard.GetInt64("i", tick.GetTree().GetID(), this.GetID())
 	var status = b3.ERROR
 	for this.maxLoop < 0 || i < this.maxLoop {
-		status = this.GetChild().Execute(tick)
+		status = this.GetChild(0).Execute(tick)
 		if status == b3.SUCCESS {
 			i++
 		} else {

@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"fmt"
 	b3 "github.com/magicsea/behavior3go"
 	. "github.com/magicsea/behavior3go/config"
 	. "github.com/magicsea/behavior3go/core"
@@ -16,7 +17,7 @@ func (this *MoveToTarget) Initialize(setting *BTNodeCfg) {
 }
 
 func (this *MoveToTarget) OnTick(tick *Tick) b3.Status {
-
+	fmt.Println("MoveToTarget")
 	unit := tick.Blackboard.GetMem("Unit")
 	if unit == nil {
 

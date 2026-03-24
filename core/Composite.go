@@ -17,8 +17,6 @@ type IComposite interface {
 type Composite struct {
 	BaseNode
 	BaseWorker
-
-	children []IBaseNode
 }
 
 func (this *Composite) Ctor() {
@@ -40,24 +38,6 @@ func (this *Composite) Initialize(params *BTNodeCfg) {
 	//fmt.Println("Composite Initialize")
 }
 
-/**
- *
- * @method GetChildCount
- * @getChildCount
-**/
-func (this *Composite) GetChildCount() int {
-	return len(this.children)
-}
-
-// GetChild
-func (this *Composite) GetChild(index int) IBaseNode {
-	return this.children[index]
-}
-
-// AddChild
-func (this *Composite) AddChild(child IBaseNode) {
-	this.children = append(this.children, child)
-}
 func (this *Composite) tick(tick *Tick) b3.Status {
 	fmt.Println("tick Composite1")
 	return b3.ERROR

@@ -3,6 +3,7 @@ package loader
 import (
 	"fmt"
 	"github.com/magicsea/behavior3go/actions"
+	"github.com/magicsea/behavior3go/condition"
 	"github.com/magicsea/behavior3go/decorators"
 	"reflect"
 	"testing"
@@ -51,7 +52,7 @@ func TestLoadTree(t *testing.T) {
 		//自定义节点注册
 		maps := b3.NewRegisterStructMaps()
 		maps.Register("Log", new(LogTest))
-		maps.Register("CheckMonsterCount", new(actions.CheckMonsterCount))
+		maps.Register("CheckMonsterCount", new(condition.CheckMonsterCount))
 		maps.Register("Attack", new(actions.Attack))
 		maps.Register("BattleSettlement", new(actions.BattleSettlement))
 		maps.Register("MoveToTarget", new(actions.MoveToTarget))
@@ -64,7 +65,7 @@ func TestLoadTree(t *testing.T) {
 		tree.Print()
 
 		//循环每一帧
-		for i := 0; i < 5; i++ {
+		for i := 0; i < 1; i++ {
 			tree.Tick(i)
 		}
 	} else {

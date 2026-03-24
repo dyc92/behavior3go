@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"fmt"
 	b3 "github.com/magicsea/behavior3go"
 	. "github.com/magicsea/behavior3go/config"
 	. "github.com/magicsea/behavior3go/core"
@@ -21,5 +22,6 @@ func (this *CreateMonster) Initialize(setting *BTNodeCfg) {
 func (this *CreateMonster) OnTick(tick *Tick) b3.Status {
 
 	//TODO: create monster
+	fmt.Println("CreateMonster")
 	return b3.SUCCESS
 }

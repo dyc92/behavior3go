@@ -7,14 +7,11 @@ import (
 
 type IDecorator interface {
 	IBaseNode
-	SetChild(child IBaseNode)
-	GetChild() IBaseNode
 }
 
 type Decorator struct {
 	BaseNode
 	BaseWorker
-	child IBaseNode
 }
 
 func (this *Decorator) Ctor() {
@@ -32,13 +29,4 @@ func (this *Decorator) Initialize(params *BTNodeCfg) {
 	params.Category = b3.DECORATOR
 	this.BaseNode.Initialize(params)
 	//this.BaseNode.IBaseWorker = this
-}
-
-// GetChild
-func (this *Decorator) GetChild() IBaseNode {
-	return this.child
-}
-
-func (this *Decorator) SetChild(child IBaseNode) {
-	this.child = child
 }

@@ -57,13 +57,13 @@ func (this *Repeater) OnOpen(tick *Tick) {
 **/
 func (this *Repeater) OnTick(tick *Tick) b3.Status {
 	//fmt.Println("tick ", this.GetTitle())
-	if this.GetChild() == nil {
+	if this.GetChild(0) == nil {
 		return b3.ERROR
 	}
 	var i = tick.Blackboard.GetInt64("i", tick.GetTree().GetID(), this.GetID())
 	var status = b3.SUCCESS
 	for this.maxLoop < 0 || i < this.maxLoop {
-		status = this.GetChild().Execute(tick)
+		status = this.GetChild(0).Execute(tick)
 		if status == b3.SUCCESS || status == b3.FAILURE {
 			i++
 		} else {

@@ -1,6 +1,7 @@
 package composites
 
 import (
+	"fmt"
 	_ "fmt"
 
 	b3 "github.com/magicsea/behavior3go"
@@ -19,7 +20,7 @@ type Sequence struct {
  * @return {Constant} A state constant.
 **/
 func (this *Sequence) OnTick(tick *Tick) b3.Status {
-	//fmt.Println("tick Sequence :", this.GetTitle())
+	fmt.Println("tick Sequence :", this.GetName())
 	for i := 0; i < this.GetChildCount(); i++ {
 		var status = this.GetChild(i).Execute(tick)
 		if status != b3.SUCCESS {

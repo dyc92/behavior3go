@@ -24,11 +24,11 @@ type Inverter struct {
  * @return {Constant} A state constant.
 **/
 func (this *Inverter) OnTick(tick *Tick) b3.Status {
-	if this.GetChild() == nil {
+	if this.GetChild(0) == nil {
 		return b3.ERROR
 	}
 
-	var status = this.GetChild().Execute(tick)
+	var status = this.GetChild(0).Execute(tick)
 	if status == b3.SUCCESS {
 		status = b3.FAILURE
 	} else if status == b3.FAILURE {

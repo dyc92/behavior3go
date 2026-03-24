@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"fmt"
 	b3 "github.com/magicsea/behavior3go"
 	. "github.com/magicsea/behavior3go/config"
 	. "github.com/magicsea/behavior3go/core"
@@ -15,6 +16,6 @@ func (this *BattleSettlement) Initialize(setting *BTNodeCfg) {
 }
 
 func (this *BattleSettlement) OnTick(tick *Tick) b3.Status {
-
+	fmt.Println("BattleSettlement")
 	return b3.SUCCESS
 }

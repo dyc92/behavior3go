@@ -36,7 +36,7 @@ func (this *Once) OnOpen(tick *Tick) {
 func (this *Once) OnTick(tick *Tick) b3.Status {
 	//fmt.Println("tick ", this.GetTitle())
 
-	if this.GetChild() == nil {
+	if this.GetChild(0) == nil {
 		return b3.ERROR
 	}
 	var i = tick.Blackboard.GetBool("once", tick.GetTree().GetID(), this.GetID())
@@ -46,7 +46,7 @@ func (this *Once) OnTick(tick *Tick) b3.Status {
 
 	var status = b3.SUCCESS
 
-	this.GetChild().Execute(tick)
+	this.GetChild(0).Execute(tick)
 
 	tick.Blackboard.Set("once", true, tick.GetTree().GetID(), this.GetID())
 	return status
