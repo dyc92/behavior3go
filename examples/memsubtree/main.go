@@ -5,24 +5,20 @@ package main
 
 import (
 	"fmt"
-	b3 "github.com/magicsea/behavior3go"
-	. "github.com/magicsea/behavior3go/config"
-	. "github.com/magicsea/behavior3go/core"
-	. "github.com/magicsea/behavior3go/examples/share"
-	. "github.com/magicsea/behavior3go/loader"
+	b3 "github.com/dyc92/behavior3go"
 	"sync"
 	"time"
 )
 
-//所有的树管理
+// 所有的树管理
 var mapTreesByID = sync.Map{}
 var maps = b3.NewRegisterStructMaps()
+
 func init() {
 	//自定义节点注册
 	maps.Register("Log", new(LogTest))
 	maps.Register("SetValue", new(SetValue))
 	maps.Register("IsValue", new(IsValue))
-
 
 	//获取子树的方法
 	SetSubTreeLoadFunc(func(id string) *BehaviorTree {
@@ -48,7 +44,7 @@ func main() {
 		tree := CreateBevTreeFromConfig(&v, maps)
 		tree.Print()
 		//保存到树管理
-		println("==>store subtree:",v.ID)
+		println("==>store subtree:", v.ID)
 		mapTreesByID.Store(v.ID, tree)
 		if firstTree == nil {
 			firstTree = tree
@@ -60,6 +56,6 @@ func main() {
 	//循环每一帧
 	for i := 0; i < 100; i++ {
 		firstTree.Tick(i, board)
-		time.Sleep(time.Millisecond*100)
+		time.Sleep(time.Millisecond * 100)
 	}
 }

@@ -2,18 +2,17 @@ package loader
 
 import (
 	"fmt"
-	"github.com/magicsea/behavior3go/actions"
-	"github.com/magicsea/behavior3go/condition"
-	"github.com/magicsea/behavior3go/decorators"
+	"github.com/dyc92/behavior3go/actions"
+	"github.com/dyc92/behavior3go/condition"
+	"github.com/dyc92/behavior3go/config"
+	"github.com/dyc92/behavior3go/decorators"
 	"reflect"
 	"testing"
 
-	b3 "github.com/magicsea/behavior3go"
-	//. "github.com/magicsea/behavior3go/actions"
-	//. "github.com/magicsea/behavior3go/composites"
-	. "github.com/magicsea/behavior3go/config"
-	. "github.com/magicsea/behavior3go/core"
-	//. "github.com/magicsea/behavior3go/decorators"
+	b3 "github.com/dyc92/behavior3go"
+
+	. "github.com/dyc92/behavior3go/core"
+	//. "github.com/dyc92/behavior3go/decorators"
 )
 
 type Test struct {
@@ -47,7 +46,7 @@ func (this *LogTest) OnTick(tick *Tick) b3.Status {
 }
 
 func TestLoadTree(t *testing.T) {
-	treeConfig, ok := LoadTreeCfg("base_dungeon_tree.json")
+	treeConfig, ok := config.LoadTreeCfg("base_dungeon_tree.json")
 	if ok {
 		//自定义节点注册
 		maps := b3.NewRegisterStructMaps()

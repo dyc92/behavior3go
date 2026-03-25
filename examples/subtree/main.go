@@ -5,21 +5,17 @@ package main
 
 import (
 	"fmt"
-	b3 "github.com/magicsea/behavior3go"
-	. "github.com/magicsea/behavior3go/config"
-	. "github.com/magicsea/behavior3go/core"
-	. "github.com/magicsea/behavior3go/examples/share"
-	. "github.com/magicsea/behavior3go/loader"
+	b3 "github.com/dyc92/behavior3go"
 	"sync"
 )
 
-//所有的树管理
+// 所有的树管理
 var mapTreesByID = sync.Map{}
 
 func init() {
 	//获取子树的方法
 	SetSubTreeLoadFunc(func(id string) *BehaviorTree {
-		println("==>load subtree:",id)
+		println("==>load subtree:", id)
 		t, ok := mapTreesByID.Load(id)
 		if ok {
 			return t.(*BehaviorTree)
@@ -45,7 +41,7 @@ func main() {
 		tree := CreateBevTreeFromConfig(&v, maps)
 		tree.Print()
 		//保存到树管理
-		println("==>store subtree:",v.ID)
+		println("==>store subtree:", v.ID)
 		mapTreesByID.Store(v.ID, tree)
 		if firstTree == nil {
 			firstTree = tree
