@@ -6,6 +6,10 @@ package main
 import (
 	"fmt"
 	b3 "github.com/dyc92/behavior3go"
+	"github.com/dyc92/behavior3go/actions"
+	"github.com/dyc92/behavior3go/config"
+	. "github.com/dyc92/behavior3go/core"
+	"github.com/dyc92/behavior3go/loader"
 	"sync"
 	"time"
 )
@@ -16,9 +20,9 @@ var maps = b3.NewRegisterStructMaps()
 
 func init() {
 	//自定义节点注册
-	maps.Register("Log", new(LogTest))
-	maps.Register("SetValue", new(SetValue))
-	maps.Register("IsValue", new(IsValue))
+	maps.Register("Log", new(actions.Log))
+	maps.Register("SetValue", new(actions.SetValue))
+	maps.Register("IsValue", new(actions.IsValue))
 
 	//获取子树的方法
 	SetSubTreeLoadFunc(func(id string) *BehaviorTree {
@@ -32,7 +36,7 @@ func init() {
 }
 
 func main() {
-	projectConfig, ok := LoadRawProjectCfg("memsubtree.b3")
+	projectConfig, ok := config.LoadTreeCfg("memsubtree.b3")
 	if !ok {
 		fmt.Println("LoadRawProjectCfg err")
 		return
@@ -40,22 +44,21 @@ func main() {
 
 	var firstTree *BehaviorTree
 	//载入
-	for _, v := range projectConfig.Data.Trees {
-		tree := CreateBevTreeFromConfig(&v, maps)
+	for _, v := range projectConfig.Import {
+		subTree, _ := config.LoadTreeCfg(v)
+		tree := loader.CreateBevTreeFromConfig(subTree, maps)
 		tree.Print()
 		//保存到树管理
-		println("==>store subtree:", v.ID)
-		mapTreesByID.Store(v.ID, tree)
+		println("==>store subtree:", tree.GetID())
+		mapTreesByID.Store(tree.GetID(), tree)
 		if firstTree == nil {
 			firstTree = tree
 		}
 	}
 
-	//输入板
-	board := NewBlackboard()
 	//循环每一帧
 	for i := 0; i < 100; i++ {
-		firstTree.Tick(i, board)
+		firstTree.Tick(i)
 		time.Sleep(time.Millisecond * 100)
 	}
 }

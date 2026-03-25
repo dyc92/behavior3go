@@ -6,20 +6,23 @@ package main
 import (
 	"fmt"
 	b3 "github.com/dyc92/behavior3go"
+	"github.com/dyc92/behavior3go/actions"
+	"github.com/dyc92/behavior3go/config"
+	"github.com/dyc92/behavior3go/loader"
 )
 
 func main() {
-	treeConfig, ok := LoadTreeCfg("tree.json")
+	treeConfig, ok := config.LoadTreeCfg("tree.json")
 	if !ok {
 		fmt.Println("LoadTreeCfg err")
 		return
 	}
 	//自定义节点注册
 	maps := b3.NewRegisterStructMaps()
-	maps.Register("Log", new(LogTest))
+	maps.Register("Log", new(actions.Log))
 
 	//载入
-	tree := CreateBevTreeFromConfig(treeConfig, maps)
+	tree := loader.CreateBevTreeFromConfig(treeConfig, maps)
 	tree.Print()
 
 	//循环每一帧
