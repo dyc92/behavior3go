@@ -39,7 +39,7 @@ type Tick struct {
 	 * @property {Object} target
 	 * @readOnly
 	**/
-	target []interface{}
+	target interface{}
 	/**
 	 * The blackboard reference.
 	 * @property {b3.Blackboard} blackboard
