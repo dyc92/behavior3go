@@ -39,6 +39,7 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 func CreateBevTreeFromConfig(config *BTTreeCfg, extMap *b3.RegisterStructMaps) *BehaviorTree {
 	baseMaps := createBaseStructMaps()
 	tree := NewBeTree()
+
 	tree.Load(config, baseMaps, extMap)
 	return tree
 }

@@ -61,9 +61,10 @@ func TestLoadTree(t *testing.T) {
 		tree := CreateBevTreeFromConfig(treeConfig, maps)
 		tree.Print()
 
+		board := NewBlackboard()
 		//循环每一帧
 		for i := 0; i < 1; i++ {
-			tree.Tick(i)
+			tree.Tick(board, i)
 		}
 	} else {
 		t.Error("LoadTreeCfg err")
