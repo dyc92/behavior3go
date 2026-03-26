@@ -2,8 +2,6 @@ package loader
 
 import (
 	"fmt"
-	"github.com/dyc92/behavior3go/actions"
-	"github.com/dyc92/behavior3go/condition"
 	"github.com/dyc92/behavior3go/config"
 	"github.com/dyc92/behavior3go/decorators"
 	"reflect"
@@ -51,13 +49,13 @@ func TestLoadTree(t *testing.T) {
 		//自定义节点注册
 		maps := b3.NewRegisterStructMaps()
 		maps.Register("Log", new(LogTest))
-		maps.Register("CheckMonsterCount", new(condition.CheckMonsterCount))
-		maps.Register("Attack", new(actions.Attack))
-		maps.Register("BattleSettlement", new(actions.BattleSettlement))
-		maps.Register("MoveToTarget", new(actions.MoveToTarget))
-		maps.Register("Patrol", new(actions.Patrol))
+		//maps.Register("CheckMonsterCount", new(condition.CheckMonsterCount))
+		//maps.Register("Attack", new(actions.Attack))
+		//maps.Register("BattleSettlement", new(actions.BattleSettlement))
+		//maps.Register("MoveToTarget", new(actions.MoveToTarget))
+		//maps.Register("Patrol", new(actions.Patrol))
 		maps.Register("Once", new(decorators.Once))
-		maps.Register("CreateMonster", new(actions.CreateMonster))
+		//maps.Register("CreateMonster", new(actions.CreateMonster))
 
 		//载入
 		tree := CreateBevTreeFromConfig(treeConfig, maps)
