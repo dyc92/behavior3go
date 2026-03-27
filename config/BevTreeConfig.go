@@ -63,9 +63,26 @@ func (node *BTNodeCfg) GetPropertyAsInt64(str string) int64 {
 	}
 	return i
 }
+func (node *BTNodeCfg) GetPropertyAsFloat64(str string) float64 {
+	v, ok := node.Args[str]
+	if !ok {
+		fmt.Println("fail, not found:", str)
+		return 0
+	}
+	if v == "" {
+		fmt.Println("fail, empty:", str)
+		return 0
+	}
+	i, err := strconv.ParseFloat(fmt.Sprintf("%v", v), 10)
+	if err != nil {
+		fmt.Println("fail, parse int64:", err, v)
+		return 0
+	}
+	return i
+}
 
-func (node *BTNodeCfg) GetPropertyAsSliceInt(str string) []int64 {
-	return node.Args[str].([]int64)
+func (node *BTNodeCfg) GetPropertyAsSlice(str string) []interface{} {
+	return node.Args[str].([]interface{})
 }
 
 type TreeVar struct {

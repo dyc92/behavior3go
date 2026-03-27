@@ -27,6 +27,7 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 	st.Register("Priority", &Priority{})
 	st.Register("RetryUntilFailure", &RetryUntilFailure{})
 	st.Register("Sequence", &Sequence{})
+	st.Register("IfElse", &IfElse{})
 
 	//decorators
 	st.Register("Inverter", &Inverter{})
