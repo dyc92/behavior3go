@@ -34,6 +34,8 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 	st.Register("Repeater", &Repeater{})
 	st.Register("RepeatUntilFailure", &RepeatUntilFailure{})
 	st.Register("RepeatUntilSuccess", &RepeatUntilSuccess{})
+	st.Register("Once", &Once{})
+
 	return st
 }
 
