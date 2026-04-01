@@ -192,6 +192,10 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 			fmt.Println("new ", data.Root.Name, " err:", err2)
 		}
 	}
+	if data.Root.Disabled != nil && *data.Root.Disabled == true {
+		this.root = nil
+	}
+
 	this.root.Ctor()
 	this.root.Initialize(&data.Root)
 	this.root.SetBaseNodeWorker(this.root.(IBaseWorker))
@@ -204,6 +208,11 @@ func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMa
 
 		for i := 0; i < len(children); i++ {
 			spec := children[i]
+
+			if spec.Disabled != nil && *spec.Disabled == true {
+				continue
+			}
+
 			var node IBaseNode
 			if spec.Path != nil {
 				node = new(SubTree)
@@ -280,6 +289,9 @@ func (this *BehaviorTree) dump() *config.BTTreeCfg {
 func (this *BehaviorTree) Tick(blackboard *Blackboard, target interface{}) b3.Status {
 	if this.blackboard == nil {
 		panic("The blackboard parameter is obligatory and must be an instance of b3.Blackboard")
+	}
+	if this.root == nil {
+		return b3.SUCCESS
 	}
 
 	/* CREATE A TICK OBJECT */
