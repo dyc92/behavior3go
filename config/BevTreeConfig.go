@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 // 编辑器地址@http://editor.behavior3.com/#/editor
@@ -25,6 +26,81 @@ type BTNodeCfg struct {
 
 func (node *BTNodeCfg) GetPropertyAsString(str string) string {
 	return node.Args[str].(string)
+}
+
+func (node *BTNodeCfg) GetPropertyAsStringSafe(str string) string {
+	if node == nil || node.Args == nil {
+		return ""
+	}
+	value, ok := node.Args[str]
+	if !ok || value == nil {
+		return ""
+	}
+	return strings.TrimSpace(fmt.Sprintf("%v", value))
+}
+
+func (node *BTNodeCfg) GetPropertyAsBool(str string) bool {
+	if node == nil || node.Args == nil {
+		return false
+	}
+	value, ok := node.Args[str]
+	if !ok || value == nil {
+		return false
+	}
+	switch v := value.(type) {
+	case bool:
+		return v
+	case string:
+		return strings.EqualFold(strings.TrimSpace(v), "true") || strings.TrimSpace(v) == "1"
+	default:
+		return fmt.Sprintf("%v", value) == "1"
+	}
+}
+
+func (node *BTNodeCfg) GetPropertyAsInt32Slice(str string) []int32 {
+	if node == nil || node.Args == nil {
+		return nil
+	}
+	value, ok := node.Args[str]
+	if !ok || value == nil {
+		return nil
+	}
+	items, ok := value.([]interface{})
+	if !ok {
+		return nil
+	}
+	ret := make([]int32, 0, len(items))
+	for _, item := range items {
+		i, err := strconv.ParseInt(fmt.Sprintf("%v", item), 10, 32)
+		if err == nil && i != 0 {
+			ret = append(ret, int32(i))
+		}
+	}
+	return ret
+}
+
+func (node *BTNodeCfg) FirstInput() string {
+	if node == nil {
+		return ""
+	}
+	for _, key := range node.Input {
+		if key != "" {
+			return key
+		}
+	}
+	return ""
+}
+
+func (node *BTNodeCfg) FirstOutput() string {
+	if node == nil {
+		return ""
+	}
+	for _, key := range node.Output {
+		if key != "" {
+			return key
+		}
+	}
+	return ""
 }
 
 func (node *BTNodeCfg) GetPropertyAsInt32(str string) int32 {

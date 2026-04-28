@@ -15,34 +15,27 @@
   "root": {
     "id": "1",
     "name": "Sequence",
-    "input": [
-      ""
-    ],
-    "output": [],
-    "args": {
-      "count": 5
-    },
     "children": [
       {
         "id": "2",
         "name": "CheckMonsterCount",
+        "disabled": true,
         "input": [],
         "output": [],
         "args": {
           "monster_config_id": 10001,
           "count": 10,
-          "char": "<"
+          "comp_char": "<"
         },
         "children": [
           {
             "id": "3",
             "name": "CreateMonster",
-            "input": [],
-            "output": [],
             "args": {
               "count": 1,
-              "monster_config_id": "10001"
-            }
+              "monster_config_id": 10001
+            },
+            "children": []
           }
         ]
       },
@@ -52,24 +45,19 @@
         "input": [],
         "output": [],
         "args": {
-          "monster_config_id": 10002,
+          "monster_config_id": 1000001,
           "count": 1,
-          "char": "<"
+          "comp_char": "<"
         },
         "children": [
           {
             "id": "5",
             "name": "Once",
-            "input": [],
-            "output": [],
-            "args": {},
             "children": [
               {
                 "id": "6",
                 "name": "BattleSettlement",
-                "input": [],
-                "output": [],
-                "args": {}
+                "children": []
               }
             ]
           }

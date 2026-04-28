@@ -21,6 +21,8 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 	st.Register("Succeeder", &Succeeder{})
 	st.Register("Wait", &Wait{})
 	st.Register("Log", &Log{})
+	st.Register("TriggerEvent", &TriggerEvent{})
+	st.Register("WaitForEvent", &WaitForEvent{})
 	//composites
 	st.Register("MemPriority", &MemPriority{})
 	st.Register("MemSequence", &MemSequence{})
