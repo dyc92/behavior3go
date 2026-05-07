@@ -1,64 +1,39 @@
 package actions
 
 import (
+	"math/rand"
+	"time"
+
 	b3 "github.com/dyc92/behavior3go"
 	. "github.com/dyc92/behavior3go/config"
 	. "github.com/dyc92/behavior3go/core"
-	"time"
 )
 
-/**
- * Wait a few seconds.
- *
- * @module b3
- * @class Wait
- * @extends Action
-**/
 type Wait struct {
 	Action
-	endTime int64
+	timeSec   int64
+	randomSec int64
 }
 
-/**
- * Initialization method.
- *
- * Settings parameters:
- *
- * - **milliseconds** (*Integer*) Maximum time, in milliseconds, a child
- *                                can execute.
- *
- * @method Initialize
- * @param {Object} settings Object with parameters.
- * @construCtor
-**/
-func (this *Wait) Initialize(setting *BTNodeCfg) {
-	this.Action.Initialize(setting)
-	this.endTime = setting.GetPropertyAsInt64("time")
+func (n *Wait) Initialize(setting *BTNodeCfg) {
+	n.Action.Initialize(setting)
+	n.timeSec = setting.GetPropertyAsInt64("time")
+	n.randomSec = setting.GetPropertyAsInt64("random")
 }
 
-/**
- * Open method.
- * @method open
- * @param {Tick} tick A tick instance.
-**/
-func (this *Wait) OnOpen(tick *Tick) {
-	var startTime int64 = time.Now().UnixNano() / 1000000
-	tick.Blackboard.Set("startTime", startTime, tick.GetTree().GetID(), this.GetID())
+func (n *Wait) OnOpen(tick *Tick) {
+	now := time.Now().UnixMilli()
+	wait := n.timeSec * 1000
+	if n.randomSec > 0 {
+		wait += rand.Int63n(n.randomSec * 1000)
+	}
+	tick.Blackboard.Set("wait_end_time", now+wait, tick.GetTree().GetID(), n.GetID())
 }
 
-/**
- * Tick method.
- * @method tick
- * @param {Tick} tick A tick instance.
- * @return {Constant} A state constant.
-**/
-func (this *Wait) OnTick(tick *Tick) b3.Status {
-	var currTime int64 = time.Now().UnixNano() / 1000000
-	var startTime = tick.Blackboard.GetInt64("startTime", tick.GetTree().GetID(), this.GetID())
-	//fmt.Println("wait:",this.GetTitle(),tick.GetLastSubTree(),"=>", currTime-startTime)
-	if currTime-startTime > this.endTime {
+func (n *Wait) OnTick(tick *Tick) b3.Status {
+	endTime := tick.Blackboard.GetInt64("wait_end_time", tick.GetTree().GetID(), n.GetID())
+	if time.Now().UnixMilli() >= endTime {
 		return b3.SUCCESS
 	}
-
 	return b3.RUNNING
 }
