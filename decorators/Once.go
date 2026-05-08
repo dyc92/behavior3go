@@ -23,9 +23,9 @@ type Once struct {
  * @method open
  * @param {Tick} tick A tick instance.
 **/
-func (this *Once) OnOpen(tick *Tick) {
-	tick.Blackboard.Set("once", false, tick.GetTree().GetID(), this.GetID())
-}
+//func (this *Once) OnOpen(tick *Tick) {
+//	tick.Blackboard.Set("once", false, tick.GetTree().GetID(), this.GetID())
+//}
 
 /**
  * Tick method.
@@ -41,13 +41,13 @@ func (this *Once) OnTick(tick *Tick) b3.Status {
 	}
 	var i = tick.Blackboard.GetBool("once", tick.GetTree().GetID(), this.GetID())
 	if i {
-		return b3.FAILURE
+		return b3.SUCCESS
 	}
 
-	var status = b3.SUCCESS
+	var status = this.GetChild(0).Execute(tick)
 
-	this.GetChild(0).Execute(tick)
-
-	tick.Blackboard.Set("once", true, tick.GetTree().GetID(), this.GetID())
+	if status == b3.SUCCESS {
+		tick.Blackboard.Set("once", true, tick.GetTree().GetID(), this.GetID())
+	}
 	return status
 }

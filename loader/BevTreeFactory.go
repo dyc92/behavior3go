@@ -17,6 +17,7 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 	//actions
 	st.Register("Error", &Error{})
 	st.Register("JustFailer", &JustFailer{})
+	st.Register("JustSuccess", &JustSuccess{})
 	st.Register("Runner", &Runner{})
 	st.Register("Succeeder", &Succeeder{})
 	st.Register("Wait", &Wait{})
@@ -30,6 +31,10 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 	st.Register("RetryUntilFailure", &RetryUntilFailure{})
 	st.Register("Sequence", &Sequence{})
 	st.Register("IfElse", &IfElse{})
+	st.Register("Switch", &Switch{})
+	st.Register("Case", &Case{})
+	st.Register("Parallel", &Parallel{})
+	st.Register("Selector", &Selector{})
 
 	//decorators
 	st.Register("Inverter", &Inverter{})
@@ -37,7 +42,11 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 	st.Register("RepeatUntilFailure", &RepeatUntilFailure{})
 	st.Register("RepeatUntilSuccess", &RepeatUntilSuccess{})
 	st.Register("Once", &Once{})
-
+	st.Register("AlwaysRunning", &AlwaysRunning{})
+	st.Register("Repeater", &Repeater{})
+	st.Register("Once", &Once{})
+	st.Register("RepeatUntilFailure", &RepeatUntilFailure{})
+	st.Register("RepeatUntilSuccess", &RepeatUntilSuccess{})
 	return st
 }
 

@@ -33,16 +33,19 @@ func (n *Wait) Initialize(setting *BTNodeCfg) {
 	}
 
 	n.isLoop = ParseArgToBool(setting.Args, "isLoop")
-
 }
 
 func (n *Wait) OnOpen(tick *Tick) {
+	if n.isLoop {
+		return
+	}
 	now := time.Now().UnixMilli()
 	wait := n.timeSec * 1000
 	if n.randomSec > 0 {
 		wait += rand.Int63n(n.randomSec * 1000)
 	}
 	tick.Blackboard.Set("wait_end_time", now+wait, tick.GetTree().GetID(), n.GetID())
+	n.isLoop = true
 }
 
 func (n *Wait) OnTick(tick *Tick) b3.Status {
