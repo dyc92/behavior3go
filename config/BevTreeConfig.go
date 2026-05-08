@@ -74,15 +74,12 @@ func ParseArgToNumber[T Number](m map[string]interface{}, key string) (T, error)
 		return zero, fmt.Errorf("key: %s 不存在", key)
 	}
 
-	var result T
-	targetType := reflect.TypeOf(result)
-
 	result, err := convertToType[T](val)
 	if err != nil {
 		return result, fmt.Errorf("key: %s %w", key, err)
 	}
 
-	return result, fmt.Errorf("key: %s 的值 %v 不是数值或字符串类型，无法转换为 %v", key, val, targetType)
+	return result, nil
 }
 
 func ParseArgToSlice[T Number | string](p map[string]interface{}, key string) ([]T, error) {
