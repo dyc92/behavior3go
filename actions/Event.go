@@ -25,7 +25,7 @@ type TriggerEvent struct {
 
 func (n *TriggerEvent) Initialize(setting *BTNodeCfg) {
 	n.Action.Initialize(setting)
-	n.event = setting.GetPropertyAsStringSafe("event")
+	n.event = ParseArgToString(setting.Args, "event")
 }
 
 func (n *TriggerEvent) OnTick(tick *Tick) b3.Status {
@@ -47,7 +47,7 @@ type WaitForEvent struct {
 
 func (n *WaitForEvent) Initialize(setting *BTNodeCfg) {
 	n.Action.Initialize(setting)
-	n.event = setting.GetPropertyAsStringSafe("event")
+	n.event = ParseArgToString(setting.Args, "event")
 }
 
 func (n *WaitForEvent) OnTick(tick *Tick) b3.Status {

@@ -13,12 +13,27 @@ type Wait struct {
 	Action
 	timeSec   int64
 	randomSec int64
+	isLoop    bool
 }
 
 func (n *Wait) Initialize(setting *BTNodeCfg) {
 	n.Action.Initialize(setting)
-	n.timeSec = setting.GetPropertyAsInt64("time")
-	n.randomSec = setting.GetPropertyAsInt64("random")
+	timeSec, err := ParseArgToNumber[int64](setting.Args, "time")
+	if err != nil {
+		n.timeSec = 0
+	} else {
+		n.timeSec = timeSec
+	}
+
+	randomSec, err := ParseArgToNumber[int64](setting.Args, "random")
+	if err != nil {
+		n.randomSec = 0
+	} else {
+		n.randomSec = randomSec
+	}
+
+	n.isLoop = ParseArgToBool(setting.Args, "isLoop")
+
 }
 
 func (n *Wait) OnOpen(tick *Tick) {
@@ -32,7 +47,8 @@ func (n *Wait) OnOpen(tick *Tick) {
 
 func (n *Wait) OnTick(tick *Tick) b3.Status {
 	endTime := tick.Blackboard.GetInt64("wait_end_time", tick.GetTree().GetID(), n.GetID())
-	if time.Now().UnixMilli() >= endTime {
+	now := time.Now().UnixMilli()
+	if now >= endTime {
 		return b3.SUCCESS
 	}
 	return b3.RUNNING

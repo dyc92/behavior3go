@@ -35,9 +35,13 @@ type RepeatUntilSuccess struct {
 **/
 func (this *RepeatUntilSuccess) Initialize(setting *BTNodeCfg) {
 	this.Decorator.Initialize(setting)
-	this.maxLoop = setting.GetPropertyAsInt64("maxLoop")
+	var err error
+	this.maxLoop, err = ParseArgToNumber[int64](setting.Args, "maxLoop")
+	if err != nil {
+		panic("maxLoop parameter in RepeatUntilSuccess decorator is an obligatory parameter")
+	}
 	if this.maxLoop < 1 {
-		panic("maxLoop parameter in MaxTime decorator is an obligatory parameter")
+		panic("maxLoop parameter in RepeatUntilSuccess decorator is an obligatory parameter")
 	}
 }
 

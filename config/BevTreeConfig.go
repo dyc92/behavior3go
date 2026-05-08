@@ -4,9 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strconv"
+	"reflect"
 	"strings"
 )
+
+type Number interface {
+	int | int8 | int16 | int32 | int64 |
+		uint | uint8 | uint16 | uint32 | uint64 |
+		float32 | float64
+}
 
 // 编辑器地址@http://editor.behavior3.com/#/editor
 // 节点json类型
@@ -24,26 +30,16 @@ type BTNodeCfg struct {
 	Category string                 `json:"category,omitempty"`
 }
 
-func (node *BTNodeCfg) GetPropertyAsString(str string) string {
-	return node.Args[str].(string)
-}
-
-func (node *BTNodeCfg) GetPropertyAsStringSafe(str string) string {
-	if node == nil || node.Args == nil {
+func ParseArgToString(g map[string]interface{}, str string) string {
+	v, ok := g[str].(string)
+	if !ok {
 		return ""
 	}
-	value, ok := node.Args[str]
-	if !ok || value == nil {
-		return ""
-	}
-	return strings.TrimSpace(fmt.Sprintf("%v", value))
+	return v
 }
 
-func (node *BTNodeCfg) GetPropertyAsBool(str string) bool {
-	if node == nil || node.Args == nil {
-		return false
-	}
-	value, ok := node.Args[str]
+func ParseArgToBool(g map[string]interface{}, str string) bool {
+	value, ok := g[str]
 	if !ok || value == nil {
 		return false
 	}
@@ -57,108 +53,59 @@ func (node *BTNodeCfg) GetPropertyAsBool(str string) bool {
 	}
 }
 
-func (node *BTNodeCfg) GetPropertyAsInt32Slice(str string) []int32 {
-	if node == nil || node.Args == nil {
-		return nil
+func convertToType[T Number | string](val interface{}) (T, error) {
+	var zero T
+	targetType := reflect.TypeOf(zero)
+	v := reflect.ValueOf(val)
+
+	// 仅支持数值类型转换
+	if (v.Kind() < reflect.Int || v.Kind() > reflect.Float64) && v.Kind() != reflect.String {
+		return zero, fmt.Errorf("值[%v]不是数值或字符串类型", val)
 	}
-	value, ok := node.Args[str]
-	if !ok || value == nil {
-		return nil
-	}
-	items, ok := value.([]interface{})
+
+	// 反射安全转换为目标泛型类型
+	return v.Convert(targetType).Interface().(T), nil
+}
+
+func ParseArgToNumber[T Number](m map[string]interface{}, key string) (T, error) {
+	val, ok := m[key]
 	if !ok {
-		return nil
-	}
-	ret := make([]int32, 0, len(items))
-	for _, item := range items {
-		i, err := strconv.ParseInt(fmt.Sprintf("%v", item), 10, 32)
-		if err == nil && i != 0 {
-			ret = append(ret, int32(i))
-		}
-	}
-	return ret
-}
-
-func (node *BTNodeCfg) FirstInput() string {
-	if node == nil {
-		return ""
-	}
-	for _, key := range node.Input {
-		if key != "" {
-			return key
-		}
-	}
-	return ""
-}
-
-func (node *BTNodeCfg) FirstOutput() string {
-	if node == nil {
-		return ""
-	}
-	for _, key := range node.Output {
-		if key != "" {
-			return key
-		}
-	}
-	return ""
-}
-
-func (node *BTNodeCfg) GetPropertyAsInt32(str string) int32 {
-	v, ok := node.Args[str]
-	if !ok {
-		fmt.Println("fail, not found:", str)
-		return 0
-	}
-	if v == "" {
-		fmt.Println("fail, empty:", str)
-		return 0
+		var zero T
+		return zero, fmt.Errorf("key: %s 不存在", key)
 	}
 
-	i, err := strconv.ParseInt(fmt.Sprintf("%v", v), 10, 32)
+	var result T
+	targetType := reflect.TypeOf(result)
+
+	result, err := convertToType[T](val)
 	if err != nil {
-		fmt.Println("fail, parse int42:", err, v)
-		return 0
+		return result, fmt.Errorf("key: %s %w", key, err)
 	}
-	return int32(i)
+
+	return result, fmt.Errorf("key: %s 的值 %v 不是数值或字符串类型，无法转换为 %v", key, val, targetType)
 }
 
-func (node *BTNodeCfg) GetPropertyAsInt64(str string) int64 {
-	v, ok := node.Args[str]
+func ParseArgToSlice[T Number | string](p map[string]interface{}, key string) ([]T, error) {
+	val, ok := p[key]
 	if !ok {
-		fmt.Println("fail, not found:", str)
-		return 0
+		return nil, fmt.Errorf("key: %s 不存在", key)
 	}
-	if v == "" {
-		fmt.Println("fail, empty:", str)
-		return 0
-	}
-	i, err := strconv.ParseInt(fmt.Sprintf("%v", v), 10, 64)
-	if err != nil {
-		fmt.Println("fail, parse int64:", err, v)
-		return 0
-	}
-	return i
-}
-func (node *BTNodeCfg) GetPropertyAsFloat64(str string) float64 {
-	v, ok := node.Args[str]
-	if !ok {
-		fmt.Println("fail, not found:", str)
-		return 0
-	}
-	if v == "" {
-		fmt.Println("fail, empty:", str)
-		return 0
-	}
-	i, err := strconv.ParseFloat(fmt.Sprintf("%v", v), 10)
-	if err != nil {
-		fmt.Println("fail, parse int64:", err, v)
-		return 0
-	}
-	return i
-}
 
-func (node *BTNodeCfg) GetPropertyAsSlice(str string) []interface{} {
-	return node.Args[str].([]interface{})
+	slice, ok := val.([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("key: %s 的值不是数组类型", key)
+	}
+
+	result := make([]T, 0, len(slice))
+	for idx, item := range slice {
+		num, err := convertToType[T](item)
+		if err != nil {
+			return nil, fmt.Errorf("数组索引[%d] %w", idx, err)
+		}
+		result = append(result, num)
+	}
+
+	return result, nil
 }
 
 type TreeVar struct {

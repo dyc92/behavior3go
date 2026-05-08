@@ -15,7 +15,7 @@ type Log struct {
 
 func (this *Log) Initialize(setting *BTNodeCfg) {
 	this.Action.Initialize(setting)
-	this.info = setting.GetPropertyAsString("info")
+	this.info = ParseArgToString(setting.Args, "info")
 }
 
 func (this *Log) OnTick(tick *Tick) b3.Status {

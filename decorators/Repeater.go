@@ -34,9 +34,13 @@ type Repeater struct {
 **/
 func (this *Repeater) Initialize(setting *BTNodeCfg) {
 	this.Decorator.Initialize(setting)
-	this.maxLoop = setting.GetPropertyAsInt64("count")
+	var err error
+	this.maxLoop, err = ParseArgToNumber[int64](setting.Args, "count")
+	if err != nil {
+		panic("count parameter in Repeater decorator is an obligatory parameter")
+	}
 	if this.maxLoop < 1 {
-		panic("maxLoop parameter in MaxTime decorator is an obligatory parameter")
+		panic("count parameter in Repeater decorator is an obligatory parameter")
 	}
 }
 
