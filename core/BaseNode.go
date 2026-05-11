@@ -28,6 +28,8 @@ type IBaseNode interface {
 	GetChildCount() int
 	GetChild(index int) IBaseNode
 	AddChild(child IBaseNode)
+	GetInput() []string
+	GetOutput() []string
 }
 
 /**
@@ -94,6 +96,9 @@ type BaseNode struct {
 	**/
 	args map[string]interface{}
 
+	output []string
+	input  []string
+
 	children []IBaseNode
 }
 
@@ -142,6 +147,8 @@ func (this *BaseNode) Initialize(params *BTNodeCfg) {
 	this.id = params.Id //|| node.id;
 	this.name = params.Name
 	this.args = params.Args //|| node.properties;
+	this.output = params.Output
+	this.input = params.Input
 }
 
 func (this *BaseNode) GetCategory() string {
@@ -157,6 +164,13 @@ func (this *BaseNode) GetName() string {
 }
 func (this *BaseNode) GetArgs(name string) interface{} {
 	return this.args[name]
+}
+
+func (this *BaseNode) GetInput() []string {
+	return this.input
+}
+func (this *BaseNode) GetOutput() []string {
+	return this.output
 }
 
 /**

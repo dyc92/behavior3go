@@ -64,8 +64,9 @@ func NewMemory() *Memory {
 	return &Memory{make(map[string]interface{})}
 }
 
-func (this *Memory) Get(key string) interface{} {
-	return this._memory[key]
+func (this *Memory) Get(key string) (interface{}, bool) {
+	v, ok := this._memory[key]
+	return v, ok
 }
 func (this *Memory) Set(key string, val interface{}) {
 	this._memory[key] = val
@@ -220,68 +221,70 @@ func (this *Blackboard) _getTreeData(treeScope string) *TreeData {
  * @param {String} nodeScope The node id if accessing the node memory.
  * @return {Object} The value stored or undefined.
 **/
-func (this *Blackboard) Get(key, treeScope, nodeScope string) interface{} {
+func (this *Blackboard) Get(key, treeScope, nodeScope string) (interface{}, bool) {
 	memory := this._getMemory(treeScope, nodeScope)
-	return memory.Get(key)
+	v, ok := memory.Get(key)
+	return v, ok
 }
-func (this *Blackboard) GetMem(key string) interface{} {
+func (this *Blackboard) GetMem(key string) (interface{}, bool) {
 	memory := this._getMemory("", "")
-	return memory.Get(key)
+	v, ok := memory.Get(key)
+	return v, ok
 }
 func (this *Blackboard) GetFloat64(key, treeScope, nodeScope string) float64 {
-	v := this.Get(key, treeScope, nodeScope)
-	if v == nil {
+	v, ok := this.Get(key, treeScope, nodeScope)
+	if !ok {
 		return 0
 	}
 	return v.(float64)
 }
 func (this *Blackboard) GetBool(key, treeScope, nodeScope string) bool {
-	v := this.Get(key, treeScope, nodeScope)
-	if v == nil {
+	v, ok := this.Get(key, treeScope, nodeScope)
+	if !ok {
 		return false
 	}
 	return v.(bool)
 }
 func (this *Blackboard) GetInt(key, treeScope, nodeScope string) int {
-	v := this.Get(key, treeScope, nodeScope)
-	if v == nil {
+	v, ok := this.Get(key, treeScope, nodeScope)
+	if !ok {
 		return 0
 	}
 	return v.(int)
 }
 func (this *Blackboard) GetInt64(key, treeScope, nodeScope string) int64 {
-	v := this.Get(key, treeScope, nodeScope)
-	if v == nil {
+	v, ok := this.Get(key, treeScope, nodeScope)
+	if !ok {
 		return 0
 	}
 	return v.(int64)
 }
 func (this *Blackboard) GetUInt64(key, treeScope, nodeScope string) uint64 {
-	v := this.Get(key, treeScope, nodeScope)
-	if v == nil {
+	v, ok := this.Get(key, treeScope, nodeScope)
+	if !ok {
 		return 0
 	}
 	return v.(uint64)
 }
 
 func (this *Blackboard) GetInt64Safe(key, treeScope, nodeScope string) int64 {
-	v := this.Get(key, treeScope, nodeScope)
-	if v == nil {
+	v, ok := this.Get(key, treeScope, nodeScope)
+	if !ok {
 		return 0
 	}
 	return ReadNumberToInt64(v)
 }
 func (this *Blackboard) GetUInt64Safe(key, treeScope, nodeScope string) uint64 {
-	v := this.Get(key, treeScope, nodeScope)
-	if v == nil {
+	v, ok := this.Get(key, treeScope, nodeScope)
+	if !ok {
 		return 0
 	}
 	return ReadNumberToUInt64(v)
 }
 
 func (this *Blackboard) GetInt32(key, treeScope, nodeScope string) int32 {
-	v := this.Get(key, treeScope, nodeScope)
-	if v == nil {
+	v, ok := this.Get(key, treeScope, nodeScope)
+	if !ok {
 		return 0
 	}
 	return v.(int32)

@@ -170,8 +170,10 @@ func (this *BehaviorTree) GetRoot() IBaseNode {
  * @param {Object} [names] A namespace or dict containing custom nodes.
 **/
 func (this *BehaviorTree) Load(data *config.BTTreeCfg, maps *b3.RegisterStructMaps, extMaps *b3.RegisterStructMaps) {
+	vars := map[string]struct{}{}
 	for i := 0; i < len(data.Vars); i++ {
 		this.blackboard.SetMem(data.Vars[i].Name, nil)
+		vars[data.Vars[i].Name] = struct{}{}
 	}
 
 	this.name = data.Name
