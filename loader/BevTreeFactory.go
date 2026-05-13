@@ -33,6 +33,7 @@ func createBaseStructMaps() *b3.RegisterStructMaps {
 	st.Register("Case", &Case{})
 	st.Register("Parallel", &Parallel{})
 	st.Register("Selector", &Selector{})
+	st.Register("RoundRobin", &RoundRobin{})
 
 	//decorators
 	st.Register("Inverter", &Inverter{})
